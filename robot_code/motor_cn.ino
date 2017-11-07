@@ -93,13 +93,8 @@ void turnL(int t)
   halt();
 }
 
-//accepts double from -1 to 1
 void setR(double i)
 {
-  //boolean dir = (i >= 0);
-  //int i2 = (int) (abs(i) * 255.0);
-  //Serial.println(i2);
-  //Serial.println(dir);
   if(i>=0)
   {
     analogWrite(RPlus, min(i,255));
@@ -112,13 +107,8 @@ void setR(double i)
   }
 }
 
-//accepts double from -1 to 1
 void setL(double i)
 {
-  //boolean dir = (i >= 0);
-  //int i2 = (int) (abs(i) * 255.0);
-  //Serial.println(i2);
-  //Serial.println(dir);
   if(i >= 0)
   {
     analogWrite(LPlus, min(i,255));
