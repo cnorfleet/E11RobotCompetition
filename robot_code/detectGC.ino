@@ -1,4 +1,5 @@
 #define thresholdCor 23
+#define LEDpin 13
 
 int readCode()
 {
@@ -35,14 +36,9 @@ int readCode()
   Serial.print("Corresponding correlation = "); Serial.println(thisIs % 100);
   Serial.print("Team color = ");
   if(thisIs > 0) { Serial.println("White"); } else { Serial.println("Green"); } //*/
-
+  
   int beaconNum = abs(thisIs)/100;
-  //Serial.println(thisIs);
-  if(beaconNum >= 5 and abs(thisIs)%100 > 29)
-  { setR(255); setL(-255); delay(250); }
-  else { setR(0); setL(0); }
-
-  return beaconNum;
+  return thisIs;
 }
 
 //for weird reasons I decided to make this return 100 * the number of the code (indexed from 1) + the absolute value of the correlation
