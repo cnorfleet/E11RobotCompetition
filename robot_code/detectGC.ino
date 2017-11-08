@@ -1,6 +1,21 @@
 #define thresholdCor 23
 #define LEDpin 13
 
+int readBeacon()
+{
+  int thisIs = readCode();
+  int beaconNum = thisIs/100; //abs(thisIs)/100
+  return beaconNum;
+}
+
+int readBeaconWell()
+{
+  int beaconNum = readBeacon();
+  if(readBeacon != beaconNum) { return 0; }
+  if(readBeacon != beaconNum) { return 0; }
+  return beaconNum;
+}
+
 int readCode()
 {
   //read light values
@@ -36,8 +51,6 @@ int readCode()
   Serial.print("Corresponding correlation = "); Serial.println(thisIs % 100);
   Serial.print("Team color = ");
   if(thisIs > 0) { Serial.println("White"); } else { Serial.println("Green"); } //*/
-  
-  int beaconNum = abs(thisIs)/100;
   return thisIs;
 }
 

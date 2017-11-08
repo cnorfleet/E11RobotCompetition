@@ -21,6 +21,17 @@ boolean GC[9][31] = {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0
                       {1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1},
                       {0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0}};
 
+//IR reflectance thresholds
+#define startBoxThreshold 700
+#define lineThreshold 790
+#define circleThreshold 940
+
+//line following speeds
+#define outSpeed 0.8
+#define outSpeed2 -0.2
+#define inSpeed 1
+#define inSpeed2 0.5
+
 void setup()
 {
   Serial.begin(9600);
@@ -29,13 +40,36 @@ void setup()
   digitalWrite(LEDpin, LOW);
   delay(200);
   whiteTeam = (digitalRead(teamPin) == LOW);
+
+  //get to far beacon #3://
+  while(readIrReflect() < lineThreshold)
+  { forward(); delay(5); }
+
+  //turn a bit
+  setR(125);
+  setL(80);
+  delay(500);
+  halt();
+
+  //follow line
+  while(readBeacon != -3)
+  {
+    int r = readIrReflect();
+    if(r < lineThreshold); //turn left
+    { 
+      setR
+    }
+    else //turn right
+    {
+      
+    }
+  }
 }
 
 void loop()
 {
+  /*
   Serial.println(readCode());
-  flashCode(4);
-  delay(10);
   flashCode(5);
   delay(10);
   flashCode(6);
@@ -44,18 +78,22 @@ void loop()
   delay(10);
   flashCode(8);
   delay(10);
+  flashCode(9);
+  delay(10);
+  */
 }
 
-void flashCode(int codeIdx)
+
+
+void flashCode(int beaconNum)
 {
-  
   unsigned long startReadTime = micros();
   int interval = 250;
   for(int i = 0; i < gcLength;)
   {
     if(micros() > startReadTime + (interval * i))
     {
-      if(XOR(GC[abs(codeIdx)][i], whiteTeam)) { digitalWrite(LEDpin, HIGH); }
+      if(XOR(GC[abs(beaconNum - 1)][i], whiteTeam)) { digitalWrite(LEDpin, HIGH); }
       else { digitalWrite(LEDpin, LOW); }
       i++;
     }
@@ -63,7 +101,4 @@ void flashCode(int codeIdx)
 }
 
 boolean XOR(boolean a, boolean b)
-{
-  return((a && !b) || (!a && b));
-}
-
+{ return((a && !b) || (!a && b)); }

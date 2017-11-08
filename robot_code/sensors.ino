@@ -1,14 +1,12 @@
 #define distSensor 14
 #define photoSensor 19
 #define irReflectSensor 18
-#define irReflectSensor2 17
 
 void initSensors()
 {
   pinMode(distSensor, INPUT);
   pinMode(photoSensor, INPUT);
   pinMode(irReflectSensor, INPUT);
-  pinMode(irReflectSensor2, INPUT);
 }
 
 void printAllSensors()
@@ -23,9 +21,6 @@ void printAllSensors()
 
 int readIrReflect()
 { return analogRead(irReflectSensor - 14); }
-
-int readIrReflect2()
-{ return analogRead(irReflectSensor2 - 14); }
 
 int readPhoto()
 { return analogRead(photoSensor - 14); }
