@@ -1,6 +1,22 @@
 #define thresholdCor 23
 #define LEDpin 13
 
+#define gcLength 31
+#define numRegisters 5
+#define numGoldCodes 8
+#define intervalFlash 250 //micro sec
+boolean GC[9][31] = {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1},
+                      {1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0},
+                      {0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0},
+                      {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1},
+                      {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1},
+                      {1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0},
+                      {0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0},
+                      {1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1},
+                      {0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0}};
+
+///////////// reading gc from beacon ////////////////
+
 int readBeacon()
 {
   int thisIs = readCode();
@@ -22,11 +38,10 @@ int readCode()
   unsigned long startReadTime = micros();
   int lightVals[gcLength] = {};
   int avgVal = 0;
-  #define interval 250
   for(int i = 0; i < gcLength;)
   {
     //Serial.println(micros() - startReadTime);
-    if(micros() > startReadTime + (interval * i))
+    if(micros() > startReadTime + (intervalFlash * i))
     {
       int photo = readPhoto();
       lightVals[i] = photo;
@@ -100,3 +115,23 @@ int dot(int i, int j)
   if(i == j) { return 1; }
   else { return -1; }
 }
+
+/////////// flashing gc to beacon //////////////////
+
+void flashCode(int beaconNum)
+{
+  unsigned long startReadTime = micros();
+  int interval = 250;
+  for(int i = 0; i < gcLength;)
+  {
+    if(micros() > startReadTime + (interval * i))
+    {
+      if(XOR(GC[abs(beaconNum - 1)][i], whiteTeam)) { digitalWrite(LEDpin, HIGH); }
+      else { digitalWrite(LEDpin, LOW); }
+      i++;
+    }
+  }
+}
+
+boolean XOR(boolean a, boolean b)
+{ return((a && !b) || (!a && b)); }

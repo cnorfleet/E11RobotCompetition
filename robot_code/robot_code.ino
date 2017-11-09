@@ -8,19 +8,6 @@
 #define teamPin 3
 boolean whiteTeam;
 
-#define gcLength 31
-#define numRegisters 5
-#define numGoldCodes 8
-boolean GC[9][31] = {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1},
-                      {1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0},
-                      {0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0},
-                      {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1},
-                      {0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1},
-                      {1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0},
-                      {0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0},
-                      {1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1},
-                      {0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0}};
-
 //IR reflectance thresholds
 #define startBoxThreshold 700
 #define lineThreshold 790
@@ -55,9 +42,9 @@ void setup()
   while(readBeacon != -3)
   {
     int r = readIrReflect();
-    if(r < lineThreshold); //turn left
+    if(r < lineThreshold) //turn left
     { 
-      setR
+      //setR
     }
     else //turn right
     {
@@ -82,23 +69,3 @@ void loop()
   delay(10);
   */
 }
-
-
-
-void flashCode(int beaconNum)
-{
-  unsigned long startReadTime = micros();
-  int interval = 250;
-  for(int i = 0; i < gcLength;)
-  {
-    if(micros() > startReadTime + (interval * i))
-    {
-      if(XOR(GC[abs(beaconNum - 1)][i], whiteTeam)) { digitalWrite(LEDpin, HIGH); }
-      else { digitalWrite(LEDpin, LOW); }
-      i++;
-    }
-  }
-}
-
-boolean XOR(boolean a, boolean b)
-{ return((a && !b) || (!a && b)); }
