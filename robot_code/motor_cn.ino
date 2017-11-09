@@ -17,13 +17,11 @@ void initMotors()
   pinMode(LEN, OUTPUT);
   digitalWrite(LEN, HIGH);
   digitalWrite(REN, HIGH);
-  //halt();
+  halt();
 }
 
 void setPowerLevel(int pwr)
-{
-  powerLevel = pwr;
-}
+{ powerLevel = pwr; }
 
 void halt()
 {
@@ -41,26 +39,12 @@ void forward()
   analogWrite(LMinus, 0);
 }
 
-void forward(int t)
-{
-  forward();
-  delay(t);
-  halt();
-}
-
 void backward()
 {
   analogWrite(RPlus, 0);
   analogWrite(RMinus, powerLevel);
   analogWrite(LPlus, 0);
   analogWrite(LMinus, powerLevel);
-}
-
-void backward(int t)
-{
-  backward();
-  delay(t);
-  halt();
 }
 
 void turnR()
@@ -71,26 +55,12 @@ void turnR()
   analogWrite(LMinus, 0);
 }
 
-void turnR(int t)
-{
-  turnR();
-  delay(t);
-  halt();
-}
-
 void turnL()
 {
   analogWrite(RPlus, powerLevel);
   analogWrite(RMinus, 0);
   analogWrite(LPlus, 0);
   analogWrite(LMinus, powerLevel);
-}
-
-void turnL(int t)
-{
-  turnL();
-  delay(t);
-  halt();
 }
 
 void setR(double i)
