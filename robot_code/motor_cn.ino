@@ -20,9 +20,6 @@ void initMotors()
   halt();
 }
 
-void setPowerLevel(int pwr)
-{ powerLevel = pwr; }
-
 void halt()
 {
   analogWrite(RPlus, 0);
@@ -30,6 +27,38 @@ void halt()
   analogWrite(LPlus, 0);
   analogWrite(LMinus, 0);
 }
+
+void setR(double i)
+{
+  if(i>=0)
+  {
+    analogWrite(RPlus, min(i,255));
+    analogWrite(RMinus, 0);
+  }
+  else
+  {
+    analogWrite(RPlus, 0);
+    analogWrite(RMinus, max(-i,-255));
+  }
+}
+
+void setL(double i)
+{
+  if(i >= 0)
+  {
+    analogWrite(LPlus, min(i,255));
+    analogWrite(LMinus, 0);
+  }
+  else
+  {
+    analogWrite(LPlus, 0);
+    analogWrite(LMinus, max(-i,-255));
+  }
+}
+
+//general function things:
+void setPowerLevel(int pwr)
+{ powerLevel = pwr; }
 
 void forward()
 {
@@ -61,32 +90,4 @@ void turnL()
   analogWrite(RMinus, 0);
   analogWrite(LPlus, 0);
   analogWrite(LMinus, powerLevel);
-}
-
-void setR(double i)
-{
-  if(i>=0)
-  {
-    analogWrite(RPlus, min(i,255));
-    analogWrite(RMinus, 0);
-  }
-  else
-  {
-    analogWrite(RPlus, 0);
-    analogWrite(RMinus, max(-i,-255));
-  }
-}
-
-void setL(double i)
-{
-  if(i >= 0)
-  {
-    analogWrite(LPlus, min(i,255));
-    analogWrite(LMinus, 0);
-  }
-  else
-  {
-    analogWrite(LPlus, 0);
-    analogWrite(LMinus, max(-i,-255));
-  }
 }
