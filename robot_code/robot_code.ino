@@ -14,10 +14,10 @@ boolean whiteTeam;
 #define circleThreshold 940
 
 //line following speeds
-#define outSpeed1 0.8
-#define outSpeed2 -0.2
-#define inSpeed1 1
-#define inSpeed2 0.5
+#define outSpeed1 0.6
+#define outSpeed2 0.3
+#define inSpeed1 0.6
+#define inSpeed2 -0.4
 
 void setup()
 {
@@ -50,20 +50,26 @@ void loop()
     int ir = readIrReflect();
 
     //react based on beacon at
-    if(beaconAt == 1)
+    if(beaconAt == 3)
     { done = true; continue; }
-    else if(beaconAt == -1)
-    { moveSpeed = 200; }
+    else if(beaconAt == -3)
+    { moveSpeed = 150; }
     
     //moved based on irSensor
-    Serial.print(", "); Serial.println(ir);
+    Serial.print(", "); Serial.print(ir); Serial.print("; ");
     if(ir > lineThreshold)
     {
+      int speedL = (int) (inSpeed1 * moveSpeed);
+      int speedR = (int) (inSpeed2 * moveSpeed);
+      Serial.print(speedL); Serial.print(", "); Serial.println(speedR);
       setL((int) (inSpeed1 * moveSpeed));
       setR((int) (inSpeed2 * moveSpeed));
     }
     else
     {
+      int speedL = (int) (outSpeed2 * moveSpeed);
+      int speedR = (int) (outSpeed1 * moveSpeed);
+      Serial.print(speedL); Serial.print("; "); Serial.println(speedR);
       setR((int) (outSpeed1 * moveSpeed));
       setL((int) (outSpeed2 * moveSpeed));
     }

@@ -28,7 +28,7 @@ void halt()
   analogWrite(LMinus, 0);
 }
 
-void setR(double i)
+void setR(int i)
 {
   if(i>=0)
   {
@@ -42,7 +42,7 @@ void setR(double i)
   }
 }
 
-void setL(double i)
+void setL(int i)
 {
   if(i >= 0)
   {

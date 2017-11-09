@@ -29,8 +29,8 @@ int readBeaconWell()
   int c = readCode();
   int beaconNum = c/100;
   if ((abs(c) % 100) < 20) { return 0; }
-  if(readBeacon != beaconNum) { return 0; }
-  if(readBeacon != beaconNum) { return 0; }
+  if(readBeacon() != beaconNum) { return 0; }
+  if(readBeacon() != beaconNum) { return 0; }
   return beaconNum;
 }
 
