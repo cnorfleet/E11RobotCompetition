@@ -6,7 +6,8 @@
 
 #define LEDpin 13
 #define teamPin 3
-boolean whiteTeam;
+boolean whiteTeam = false;
+int gcMult = -1;
 
 //IR reflectance thresholds
 #define lineThreshold 790
@@ -33,11 +34,12 @@ void setup()
   digitalWrite(LEDpin, LOW);
   delay(200);
   whiteTeam = (digitalRead(teamPin) == LOW);
+  if(whiteTeam) { gcMult = 1; }
 }
 
 /**
  * Behavior list:
- * special: at start, go forward until find black circle***
+ * special: at start, go forward until find black circle (see start)**
  * if see unclaimed bump beacon, slow down and go forward along blue line**
  * if see claimed bump beacon, turn around**
  * if found blue line, follow it**
@@ -47,19 +49,26 @@ void setup()
  int t = 0;
 void loop()
 {
-  if (t > 500)
+  if (t > 1000)
   { printAllSensors(); t=0; } t++;
   
   double moveSpeed = 255.0;
-  if(readIrAvg() < 820 + random(100)) //if in circle, turn right
+  if(false) //if it sees the blue line
+  {
+    //do a thing
+  }
+  else if(readIrAvg() < 720 + random(100)) //if in circle, turn right
   {
     setR((int) (moveSpeed * inSpeedR));
     setL((int) (moveSpeed * inSpeedL));
+    flashNextCode();
+    
   }
   else //if lost, bank turn left
   {
     setR((int) (moveSpeed * outSpeedR));
     setL((int) (moveSpeed * outSpeedL));
+    flashNextCode();
   }
   
   /*//get to far beacon #1 (as white team)://
@@ -104,4 +113,15 @@ void loop()
   }
   while(true) //after done, just stop
   { halt(); delay(50); }*/
+}
+
+int codesToFlash[] = { 5, 6, 7, 8, 5, 6, 7, 8, 9 };
+int curCodeIdx = 0;
+//this takes ~8 milliseconds
+void flashNextCode()
+{
+  flashCode(codesToFlash[curCodeIdx]);
+  curCodeIdx++;
+  if(curCodeIdx > 9)
+  { curCodeIdx = 0; }
 }
