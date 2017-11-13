@@ -5,7 +5,7 @@
 #define LEN 6
 #define REN 11
 
-int powerLevel = 255;
+int powerLevel = 150;
 
 void initMotors()
 {
@@ -58,36 +58,33 @@ void setL(int i)
 
 //general function things:
 void setPowerLevel(int pwr)
-{ powerLevel = pwr; }
+{
+  if(powerLevel > 255) { powerLevel = 255; }
+  else if (powerLevel < -255) { powerLevel = -255; }
+  else { powerLevel = pwr; }
+}
 
 void forward()
 {
-  analogWrite(RPlus, powerLevel);
-  analogWrite(RMinus, 0);
-  analogWrite(LPlus, powerLevel);
-  analogWrite(LMinus, 0);
+  setR(powerLevel);
+  setL(powerLevel);
 }
 
 void backward()
 {
-  analogWrite(RPlus, 0);
-  analogWrite(RMinus, powerLevel);
-  analogWrite(LPlus, 0);
-  analogWrite(LMinus, powerLevel);
+  setR(-powerLevel);
+  setL(-powerLevel);
 }
 
 void turnR()
 {
-  analogWrite(RPlus, 0);
-  analogWrite(RMinus, powerLevel);
-  analogWrite(LPlus, HIGH);
-  analogWrite(LMinus, 0);
+  setR(-powerLevel);
+  setL(powerLevel);
 }
 
 void turnL()
 {
-  analogWrite(RPlus, powerLevel);
-  analogWrite(RMinus, 0);
-  analogWrite(LPlus, 0);
-  analogWrite(LMinus, powerLevel);
+  setR(powerLevel);
+  setL(-powerLevel);
 }
+
