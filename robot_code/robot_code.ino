@@ -24,7 +24,6 @@ void setup()
   Serial.begin(9600);
   initMotors();
   initSensors();
-  initServo();
   pinMode(LEDpin, OUTPUT);
   pinMode(teamPin, INPUT);
   digitalWrite(LEDpin, LOW);
