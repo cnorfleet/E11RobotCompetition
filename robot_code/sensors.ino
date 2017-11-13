@@ -1,29 +1,38 @@
-#define distSensor 14
-#define photoSensor 19
-#define irReflectSensor 18
+#define photoSensor 14
+#define irReflectSensor1 15
+#define irReflectSensor2 16
+#define irReflectSensor3 17
+#define irReflectSensor4 18
+#define irReflectSensor5 19
+
+int irSensorPins[5] = { irReflectSensor1, irReflectSensor2, irReflectSensor3, irReflectSensor4, irReflectSensor5 };
 
 void initSensors()
 {
-  pinMode(distSensor, INPUT);
   pinMode(photoSensor, INPUT);
-  pinMode(irReflectSensor, INPUT);
+  pinMode(irReflectSensor1, INPUT);
+  pinMode(irReflectSensor2, INPUT);
+  pinMode(irReflectSensor3, INPUT);
+  pinMode(irReflectSensor4, INPUT);
+  pinMode(irReflectSensor5, INPUT);
 }
 
 void printAllSensors()
 {
-  Serial.print("Dist Sensor: ");
-  Serial.print(readDist());
-  Serial.print(", Photo Sensor: ");
+  Serial.print("Phototransistor Sensor: ");
   Serial.print(readPhoto());
-  Serial.print(", IR Reflect Sensor: ");
-  Serial.println(readIrReflect());
+  Serial.print(" and IR Reflectance Sensors: ");
+  for(int i = 0; i < 5; i++)
+  { Serial.print(readIr(i+1)); if(i != 4) { Serial.print(", "); } }
+  Serial.println();
 }
 
-int readIrReflect()
-{ return analogRead(irReflectSensor - 14); }
+int readSensor(int pin)
+{ return analogRead(pin - 14); }
 
 int readPhoto()
-{ return analogRead(photoSensor - 14); }
+{ return readSensor(photoSensor); }
 
-int readDist()
-{ analogRead(distSensor - 14); }
+int readIr(int num)
+{ return readSensor(irSensorPins[num-1]); }
+
