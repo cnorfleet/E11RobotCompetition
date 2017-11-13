@@ -32,13 +32,13 @@ void setR(int i)
 {
   if(i>=0)
   {
-    analogWrite(RMinus, min(i,255));
-    analogWrite(RPlus, 0);
+    analogWrite(RPlus, min(i,255));
+    analogWrite(RMinus, 0);
   }
   else
   {
-    analogWrite(RMinus, 0);
-    analogWrite(RPlus, max(-i,-255));
+    analogWrite(RPlus, 0);
+    analogWrite(RMinus, max(-i,-255));
   }
 }
 
@@ -46,13 +46,13 @@ void setL(int i)
 {
   if(i >= 0)
   {
-    analogWrite(LMinus, min(i,255));
-    analogWrite(LPlus, 0);
+    analogWrite(LPlus, min(i,255));
+    analogWrite(LMinus, 0);
   }
   else
   {
-    analogWrite(LMinus, 0);
-    analogWrite(LPlus, max(-i,-255));
+    analogWrite(LPlus, 0);
+    analogWrite(LMinus, max(-i,-255));
   }
 }
 

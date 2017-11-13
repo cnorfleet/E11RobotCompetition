@@ -9,15 +9,19 @@
 boolean whiteTeam;
 
 //IR reflectance thresholds
-#define startBoxThreshold 700
 #define lineThreshold 790
-#define circleThreshold 940
+#define circleThreshold 640
+
+//white = 970 +- 10
+//black circle = 590 +- 25
+//blue line = 700 +- 70
+//red line = indistinguishable from white  
 
 //line following speeds
-#define outSpeed1 0.6
-#define outSpeed2 0.3
-#define inSpeed1 0.6
-#define inSpeed2 -0.4
+#define outSpeedR 1
+#define outSpeedL 0.2
+#define inSpeedL 0.7
+#define inSpeedR -0.3
 
 void setup()
 {
@@ -31,9 +35,34 @@ void setup()
   whiteTeam = (digitalRead(teamPin) == LOW);
 }
 
+/**
+ * Behavior list:
+ * special: at start, go forward until find black circle***
+ * if see unclaimed bump beacon, slow down and go forward along blue line**
+ * if see claimed bump beacon, turn around**
+ * if found blue line, follow it**
+ * if on black circle, turn right to stay on circle
+ * if lost, bank turn left
+ */
+ int t = 0;
 void loop()
 {
-  //get to far beacon #1 (as white team)://
+  if (t > 500)
+  { printAllSensors(); t=0; } t++;
+  
+  double moveSpeed = 255.0;
+  if(readIrAvg() < 820 + random(100)) //if in circle, turn right
+  {
+    setR((int) (moveSpeed * inSpeedR));
+    setL((int) (moveSpeed * inSpeedL));
+  }
+  else //if lost, bank turn left
+  {
+    setR((int) (moveSpeed * outSpeedR));
+    setL((int) (moveSpeed * outSpeedL));
+  }
+  
+  /*//get to far beacon #1 (as white team)://
   //behaviors:
   //if see claimed beacon, stop moving
   //if see unclaimed beacon, keep moving but go slower
@@ -46,13 +75,13 @@ void loop()
     int moveSpeed = 255;
     int beaconAt = readBeaconWell();
     Serial.print(beaconAt);
-    int ir = readIrReflect();
+    int ir = 0;//readIrReflect();
 
     //react based on beacon at
     if(beaconAt == 3)
     { done = true; continue; }
     else if(beaconAt == -3)
-    { moveSpeed = 150; }
+    { moveSpeed = 150; flashCode(3); }
     
     //moved based on irSensor
     Serial.print(", "); Serial.print(ir); Serial.print("; ");
@@ -74,5 +103,5 @@ void loop()
     }
   }
   while(true) //after done, just stop
-  { halt(); delay(50); }
+  { halt(); delay(50); }*/
 }

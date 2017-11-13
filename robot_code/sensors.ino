@@ -36,3 +36,11 @@ int readPhoto()
 int readIr(int num)
 { return readSensor(irSensorPins[num-1]); }
 
+int readIrAvg()
+{
+  int total = 0;
+  for (int i = 0; i < 5; i++)
+  { total += readIr(i+1); }
+  return total/5;
+}
+
