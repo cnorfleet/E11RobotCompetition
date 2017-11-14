@@ -160,3 +160,13 @@ void flashCodeAndNine(int beaconNum)
   digitalWrite(ninePin, LOW);
 }
 
+int codesToFlash[] = { 5, 6, 7, 8 }; //who do we appreciate
+int curCodeIdx = 0;
+//this takes ~8 milliseconds
+void flashNextCode()
+{
+  flashCodeAndNine(codesToFlash[curCodeIdx]);
+  curCodeIdx++;
+  if(curCodeIdx > 4)
+  { curCodeIdx = 0; }
+}

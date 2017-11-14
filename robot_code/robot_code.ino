@@ -4,6 +4,17 @@
  * November 2017
  */
 
+/**
+ * Behavior list: (divided amoung three (and a half) states)
+ * special: at start, go forward until find black circle (see start)**
+ * special: if at end of game and at one of the claimed beacons next to start, try to return to start **
+ * if see unclaimed bump beacon, slow down and go forward along blue line**
+ * if see claimed bump beacon, turn around**
+ * if found blue line, follow it**
+ * if on black circle, turn right to stay on circle
+ * if lost, bank turn left
+*/
+
 #define LEDpin 13
 #define teamPin 3
 #define ninePin 2
@@ -24,6 +35,8 @@ int gcMult = -1;
 #define outSpeedL 0.2
 #define inSpeedL 0.7
 #define inSpeedR -0.3
+#define blueSpeedL 0.6
+#define blueSpeedR -0.4
 
 void setup()
 {
@@ -37,7 +50,9 @@ void setup()
   delay(200);
   whiteTeam = (digitalRead(teamPin) == LOW);
   if(whiteTeam) { gcMult = 1; }
-
+  
+  //start "state":
+  //behavior (special): at start, go forward until it finds black circle
   /*setR((int) (255 * 0.8));
   setL((int) (255 * 0.9));
   while(readIrAvg() > 620)
@@ -50,11 +65,9 @@ void setup()
 }
 
 /**
- * Behavior list:
- * special: at start, go forward until find black circle (see start)**
- * if see unclaimed bump beacon, slow down and go forward along blue line**
- * if see claimed bump beacon, turn around**
- * if found blue line, follow it**
+ * Main state ("loop")
+ * Behaviors:
+ * if found blue line, turn to follow it and switch to blue line state
  * if on black circle, turn right to stay on circle
  * if lost, bank turn left
  */
@@ -65,16 +78,27 @@ void loop()
   { printAllSensors(); t=0; } t++;
   
   double moveSpeed = 255.0;
-  if(false) //if it sees the blue line
+  if(false) //if currently on blue line, jump to blue line state
   {
-    //do a thing
+    //write this code plz
+  }
+  else if((readIr(1) + readIr(2) + readIr(3))/3 < 720 + random(50)
+    and ((readIr(4) > 720 + random(20)
+    and readIr(4) < 900 + random(50))
+    and (readIr(5) > 720 + random(20)
+    and readIr(5) < 900 + random(50)))) //if it sees the blue line and is on black circle, turn right and go to blue line state
+  {
+    Serial.println("blue!");
+    setR((int) (moveSpeed * blueSpeedR));
+    setL((int) (moveSpeed * blueSpeedL));
+    delay(500);
+    followBlueLine(); //go to following blue line state
   }
   else if(readIrAvg() < 720 + random(100)) //if in circle, turn right
   {
     setR((int) (moveSpeed * inSpeedR));
     setL((int) (moveSpeed * inSpeedL));
     flashNextCode();
-    
   }
   else //if lost, bank turn left
   {
@@ -82,58 +106,4 @@ void loop()
     setL((int) (moveSpeed * outSpeedL));
     flashNextCode();
   }
-  
-  /*//get to far beacon #1 (as white team)://
-  //behaviors:
-  //if see claimed beacon, stop moving
-  //if see unclaimed beacon, keep moving but go slower
-  //if on line turn right
-  //if lost, wide turn left
-  boolean done = false;
-  while(!done)
-  {
-    //setup
-    int moveSpeed = 255;
-    int beaconAt = readBeaconWell();
-    Serial.print(beaconAt);
-    int ir = 0;//readIrReflect();
-
-    //react based on beacon at
-    if(beaconAt == 3)
-    { done = true; continue; }
-    else if(beaconAt == -3)
-    { moveSpeed = 150; flashCode(3); }
-    
-    //moved based on irSensor
-    Serial.print(", "); Serial.print(ir); Serial.print("; ");
-    if(ir > lineThreshold)
-    {
-      int speedL = (int) (inSpeed1 * moveSpeed);
-      int speedR = (int) (inSpeed2 * moveSpeed);
-      Serial.print(speedL); Serial.print(", "); Serial.println(speedR);
-      setL((int) (inSpeed1 * moveSpeed));
-      setR((int) (inSpeed2 * moveSpeed));
-    }
-    else
-    {
-      int speedL = (int) (outSpeed2 * moveSpeed);
-      int speedR = (int) (outSpeed1 * moveSpeed);
-      Serial.print(speedL); Serial.print("; "); Serial.println(speedR);
-      setR((int) (outSpeed1 * moveSpeed));
-      setL((int) (outSpeed2 * moveSpeed));
-    }
-  }
-  while(true) //after done, just stop
-  { halt(); delay(50); }*/
-}
-
-int codesToFlash[] = { 5, 6, 7, 8 }; //who do we appreciate
-int curCodeIdx = 0;
-//this takes ~8 milliseconds
-void flashNextCode()
-{
-  flashCodeAndNine(codesToFlash[curCodeIdx]);
-  curCodeIdx++;
-  if(curCodeIdx > 4)
-  { curCodeIdx = 0; }
 }
