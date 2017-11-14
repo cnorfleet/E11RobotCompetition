@@ -31,7 +31,7 @@ int gcMult = -1;
 //red line = indistinguishable from white  
 
 //line following speeds
-#define outSpeedR 1
+#define outSpeedR 0.65
 #define outSpeedL 0.2
 #define inSpeedL 0.7
 #define inSpeedR -0.3
@@ -53,14 +53,13 @@ void setup()
   
   //start "state":
   //behavior (special): at start, go forward until it finds black circle
-  /*setR((int) (255 * 0.8));
-  setL((int) (255 * 0.9));
+  setR((int) (255 * 0.7));
+  setL((int) (255 * 1));
   while(readIrAvg() > 620)
-  { printAllSensors(); delay(1); }
-  Serial.println("aaaaaaaa");
+  { delay(1); }
   setR((int) (255 * inSpeedR));
   setL((int) (255 * inSpeedL));
-  delay(50);*/
+  delay(50);//*/
   halt();
 }
 
@@ -71,22 +70,18 @@ void setup()
  * if on black circle, turn right to stay on circle
  * if lost, bank turn left
  */
- int t = 0;
+
 void loop()
 {
-  if (t > 300)
-  { printAllSensors(); t=0; } t++;
-  
   double moveSpeed = 200.0;
   if(amOnBlueLineNow()) //if currently on blue line, jump to blue line state
-  { followBlueLine(); Serial.println("on blue!"); }
+  { followBlueLine(); }
   else if((readIr(1) + readIr(2) + readIr(3))/3 < 720 + random(50)
     and ((readIr(4) > 720 + random(20)
     and readIr(4) < 900 + random(50))
     and (readIr(5) > 720 + random(20)
     and readIr(5) < 900 + random(50)))) //if it sees the blue line and is on black circle, turn right and go to blue line state
   {
-    Serial.println("blue!");
     setR((int) (moveSpeed * blueSpeedR));
     setL((int) (moveSpeed * blueSpeedL));
     delay(600);

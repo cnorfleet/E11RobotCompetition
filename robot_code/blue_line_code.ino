@@ -7,46 +7,47 @@
  * if can't find blue line anymore, return to main state
  */
  double blueMoveSpeed = 120.0;
+ unsigned long lastTime;
+ int t;
 void followBlueLine()
 {
+  t = 0;
+  lastTime = millis();
   double blueLoc = getBlueLineLoc();
   while(blueLoc != -1)
-  {
+  { t++;
     int bNum = readBeaconWell();
-    if(isCornerBeacon(bNum))
-    {
-      if(XOR(bNum < 0, whiteTeam)) //if see unclaimed corner beacon, slow down and go forward along line
+    if(isCornerBeacon(bNum) and not (XOR(bNum < 0, whiteTeam)))
+    {  //if see claimed bump beacon:
+      if(false) //if time is almost up, go home
+      { headHome(bNum % 2 == 0); }
+      else //otherwise, turn around
       {
-        Serial.println("look a beacon");
-        int turnRightAmt = blueMoveSpeed * 0.2 * (blueLoc - 3);
-        setR(blueMoveSpeed * 0.7 - turnRightAmt);
-        setL(blueMoveSpeed * 0.5 + turnRightAmt);
-      }
-      else //if see claimed bump beacon:
-      {
-        if(false) //if time is almost up, go home
-        { headHome(bNum % 2 == 0); }
-        else //otherwise, turn around
-        {
-          Serial.println("hey i'm done");
-          setR(-255); setL(-255);
-          delay(250);
-          setR(255); setL(-255);
-          delay(200);
-        }
+        setR(-255); setL(-255);
+        delay(250);
+        setR(255); setL(-255);
+        delay(200);
       }
     }
-    else //if it's on the blue line and it doesn't see any of the corner beacons, follow the line
+    else if (t > 50)
     {
-      Serial.println("blue line!");
+      unsigned long m = millis();
+      if(m > lastTime + 6000)
+      {
+        setR(-255); setL(-255);
+        delay(100);
+        halt();
+        lastTime = m;
+      }
+      t = 0;
+    }
+    else //if it's on the blue line and it doesn't see any claimed corner beacons, follow the line
+    {
       int turnRightAmt = blueMoveSpeed * 0.2 * (blueLoc - 3);
-      Serial.print(blueMoveSpeed * 0.9 - turnRightAmt);
-      Serial.print(blueMoveSpeed * 0.6 + turnRightAmt);
       setR(blueMoveSpeed * 0.8 - turnRightAmt);
-      setL(blueMoveSpeed * 0.6 + turnRightAmt);
+      setL(blueMoveSpeed * 0.7 + turnRightAmt);
     }
     blueLoc = getBlueLineLoc();
-    Serial.print(blueLoc); Serial.print(", ");
   }
 }
 
@@ -57,9 +58,6 @@ double getBlueLineLoc()
   int irClassified[5];
   for(int i = 0; i < 5; i++)
   { irClassified[i] = classifyIR(IR[i]); }
-
-  //for(int i : irClassified)
-  //{ Serial.print(", "); Serial.print(i); }
 
   //count black and blue readings, and also sum up the total of the reading classification values
   int countBlack = 0; int countBlue = 0; double sum = 0.0;
@@ -83,12 +81,11 @@ int classifyIR(int ir)
 {
   if(ir > 720 + random(20) and ir < 900 + random(50)) //blue
   { return 1; }
-  else if (ir > 800) //white
+  else if (ir > 880) //white
   { return 0; }
   else //black
   { return 2; }
 }
-
 
 bool amOnBlueLineNow()
 {
@@ -113,7 +110,7 @@ bool amOnBlueLineNow()
   }
   
   if(countBlack < 2 and countBlue + countBlack > 1
-    and irClassified[0] == 0 and irClassified[4] == 0)
+    and IR[0] > 720 == 0 and IR[0] > 720)
   { return true; }
   else
   { return false; }
