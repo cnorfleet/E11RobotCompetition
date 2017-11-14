@@ -6,6 +6,7 @@
 
 #define LEDpin 13
 #define teamPin 3
+#define ninePin 2
 boolean whiteTeam = false;
 int gcMult = -1;
 
@@ -30,20 +31,21 @@ void setup()
   initMotors();
   initSensors();
   pinMode(LEDpin, OUTPUT);
+  pinMode(ninePin, OUTPUT);
   pinMode(teamPin, INPUT);
   digitalWrite(LEDpin, LOW);
   delay(200);
   whiteTeam = (digitalRead(teamPin) == LOW);
   if(whiteTeam) { gcMult = 1; }
 
-  setR((int) (255 * 0.8));
+  /*setR((int) (255 * 0.8));
   setL((int) (255 * 0.9));
   while(readIrAvg() > 620)
   { printAllSensors(); delay(1); }
   Serial.println("aaaaaaaa");
   setR((int) (255 * inSpeedR));
   setL((int) (255 * inSpeedL));
-  delay(50);
+  delay(50);*/
   halt();
 }
 
@@ -125,13 +127,13 @@ void loop()
   { halt(); delay(50); }*/
 }
 
-int codesToFlash[] = { 5, 6, 7, 8, 5, 6, 7, 8, 9 };
+int codesToFlash[] = { 5, 6, 7, 8 }; //who do we appreciate
 int curCodeIdx = 0;
 //this takes ~8 milliseconds
 void flashNextCode()
 {
-  flashCode(codesToFlash[curCodeIdx]);
+  flashCodeAndNine(codesToFlash[curCodeIdx]);
   curCodeIdx++;
-  if(curCodeIdx > 9)
+  if(curCodeIdx > 4)
   { curCodeIdx = 0; }
 }

@@ -1,5 +1,6 @@
 #define thresholdCor 23
 #define LEDpin 13
+#define ninePin 2
 
 #define gcLength 31
 #define numRegisters 5
@@ -13,7 +14,9 @@ boolean GC[9][31] = {{0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0
                       {1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0},
                       {0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0},
                       {1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1},
-                      {0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0}};
+                      {0 ,0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1}};
+                      //{0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0}};
+                      
 
 ///////////// reading gc from beacon ////////////////
 
@@ -137,3 +140,23 @@ void flashCode(int beaconNum)
 
 boolean XOR(boolean a, boolean b)
 { return((a && !b) || (!a && b)); }
+
+void flashCodeAndNine(int beaconNum)
+{
+  unsigned long startReadTime = micros();
+  int interval = 250;
+  for(int i = 0; i < gcLength;)
+  {
+    if(micros() > startReadTime + (interval * i))
+    {
+      if(XOR(GC[abs(beaconNum - 1)][i], whiteTeam)) { digitalWrite(LEDpin, HIGH); }
+      else { digitalWrite(LEDpin, LOW); }
+      if(XOR(GC[abs(9 - 1)][i], whiteTeam)) { digitalWrite(ninePin, HIGH); }
+      else { digitalWrite(ninePin, LOW); }
+      i++;
+    }
+  }
+  digitalWrite(LEDpin, LOW);
+  digitalWrite(ninePin, LOW);
+}
+
