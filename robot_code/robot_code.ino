@@ -35,6 +35,16 @@ void setup()
   delay(200);
   whiteTeam = (digitalRead(teamPin) == LOW);
   if(whiteTeam) { gcMult = 1; }
+
+  setR((int) (255 * 0.8));
+  setL((int) (255 * 0.9));
+  while(readIrAvg() > 620)
+  { printAllSensors(); delay(1); }
+  Serial.println("aaaaaaaa");
+  setR((int) (255 * inSpeedR));
+  setL((int) (255 * inSpeedL));
+  delay(50);
+  halt();
 }
 
 /**
@@ -49,7 +59,7 @@ void setup()
  int t = 0;
 void loop()
 {
-  if (t > 1000)
+  if (t > 300)
   { printAllSensors(); t=0; } t++;
   
   double moveSpeed = 255.0;
