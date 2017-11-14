@@ -77,11 +77,9 @@ void loop()
   if (t > 300)
   { printAllSensors(); t=0; } t++;
   
-  double moveSpeed = 255.0;
-  if(false) //if currently on blue line, jump to blue line state
-  {
-    //write this code plz
-  }
+  double moveSpeed = 200.0;
+  if(amOnBlueLineNow()) //if currently on blue line, jump to blue line state
+  { followBlueLine(); Serial.println("on blue!"); }
   else if((readIr(1) + readIr(2) + readIr(3))/3 < 720 + random(50)
     and ((readIr(4) > 720 + random(20)
     and readIr(4) < 900 + random(50))
@@ -91,7 +89,7 @@ void loop()
     Serial.println("blue!");
     setR((int) (moveSpeed * blueSpeedR));
     setL((int) (moveSpeed * blueSpeedL));
-    delay(500);
+    delay(600);
     followBlueLine(); //go to following blue line state
   }
   else if(readIrAvg() < 720 + random(100)) //if in circle, turn right
