@@ -42,6 +42,7 @@ int gcMult = -1;
 #define blueSpeedR -0.4
 
 unsigned long startTime;
+unsigned long stuckTime;
 
 void setup()
 {
@@ -72,6 +73,7 @@ void setup()
   setL((int) (255 * inSpeedL));
   delay(50);//*/
   halt();
+  stuckTime = millis();
 }
 
 /**
@@ -81,10 +83,13 @@ void setup()
  * if on black circle, turn right to stay on circle
  * if lost, bank turn left
  */
+ int ttt = 0;
 void loop()
 {
-  double moveSpeed = 200.0;
-  if(getBlueLineLoc() != -1) //if currently on blue line, jump to blue line state
+  double moveSpeed = 200.0; ttt++;
+  if(ttt > 200) //try to get unstuck
+  { backUp(); }
+  else if(getBlueLineLoc() != -1) //if currently on blue line, jump to blue line state
   { halt(); followBlueLine(); }
   else if((readIr(1) + readIr(2) + readIr(3))/3 < 720 + random(50)
     and ((readIr(4) > 720 + random(20)
@@ -110,3 +115,18 @@ void loop()
     flashNextCode();
   }
 }
+
+void backUp()
+{
+  if(millis() > stuckTime + 10000)
+  {
+    tone(buzzerPin, 400);
+    setR(-128); setL(-128);
+    delay(250);
+    halt();
+    stuckTime = millis();
+    noTone(buzzerPin);
+  }
+  ttt = 0;
+}
+
