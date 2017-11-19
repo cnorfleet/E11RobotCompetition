@@ -118,7 +118,7 @@ void loop()
 
 void backUp()
 {
-  if(millis() > stuckTime + 10000)
+  if(millis() > stuckTime + 8000)
   {
     tone(buzzerPin, 400);
     setR(-128); setL(-128);
