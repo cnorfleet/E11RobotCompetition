@@ -10,25 +10,29 @@
  */
 void headHome(bool rightSide) //state for heading home at end of game
 {
-  //turn towards box
   if(rightSide)
   {
-    setR(0.7);
-    setL(0.5);
-    delay(800);
+    //turn towards box
+    setR(0.1 * 255);
+    setL(0.9 * 255);
+    delay(450);
+    //go to the box
+    setR((int) (255 * 0.65));
+    setL((int) (255 * 0.80));
   }
   else
   {
-    setR(0.4);
-    setL(0.8);
-    delay(800);
+    //turn towards box
+    setR(0.75 * 255);
+    setL(0.1 * 255);
+    delay(450);
+    //go to the box
+    setR((int) (255 * 0.55));
+    setL((int) (255 * 0.95));
   }
-  //go to the box
-  setR((int) (255 * 0.55));
-  setL((int) (255 * 0.8));
   while(readIrAvg() > 900)
   { delay(1); }
-  delay(150);
+  delay(300);
   halt();
 
   //play a song b/c yay
