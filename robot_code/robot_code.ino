@@ -20,6 +20,7 @@
 #define ninePin2 5
 #define teamPin 3
 #define ninePin 2
+#define buzzerPin 4
 boolean whiteTeam = false;
 int gcMult = -1;
 
@@ -44,6 +45,7 @@ unsigned long startTime;
 
 void setup()
 {
+  tone(buzzerPin, 500);
   Serial.begin(9600);
   initMotors();
   initSensors();
@@ -58,12 +60,13 @@ void setup()
   delay(200);
   whiteTeam = (digitalRead(teamPin) == LOW);
   if(whiteTeam) { gcMult = 1; }
+  noTone(buzzerPin);
   
   //start "state":
   //behavior (special): at start, go forward until it finds black circle
-  setR((int) (255 * 0.5));
-  setL((int) (255 * 0.6));
-  while(readIrAvg() > 800)
+  setR((int) (255 * 0.6));
+  setL((int) (255 * 0.8));
+  while(readIrAvg() > 870)
   { delay(1); }
   setR((int) (255 * inSpeedR));
   setL((int) (255 * inSpeedL));

@@ -19,15 +19,17 @@ void followBlueLine()
   { t++;
     int bNum = readBeaconWell();
     if(isCornerBeacon(bNum) and not (XOR(bNum < 0, whiteTeam)))
-    {  //if see claimed bump beacon:
+    { //if see claimed bump beacon:
       if(millis() > startTime + timeToGoHome) //if time is almost up, go home
       { headHome(bNum % 2 == 0); }
       else //otherwise, turn around
       {
+        tone(buzzerPin, 800);
         setR(-255); setL(-255);
         delay(250);
         setR(255); setL(-255);
         delay(200);
+        noTone(buzzerPin);
       }
     }
     else if (t > 50)
