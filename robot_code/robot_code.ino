@@ -61,9 +61,9 @@ void setup()
   
   //start "state":
   //behavior (special): at start, go forward until it finds black circle
-  setR((int) (255 * 0.7));
-  setL((int) (255 * 1));
-  while(readIrAvg() > 620)
+  setR((int) (255 * 0.5));
+  setL((int) (255 * 0.6));
+  while(readIrAvg() > 800)
   { delay(1); }
   setR((int) (255 * inSpeedR));
   setL((int) (255 * inSpeedL));
