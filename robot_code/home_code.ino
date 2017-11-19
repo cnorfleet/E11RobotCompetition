@@ -10,7 +10,28 @@
  */
 void headHome(bool rightSide) //state for heading home at end of game
 {
+  //turn towards box
+  if(rightSide)
+  {
+    setR(0.8);
+    setL(0.5);
+    delay(500);
+  }
+  else
+  {
+    setR(0.5);
+    setL(0.8);
+    delay(500);
+  }
+  //go to the box
+  setR((int) (255 * 0.55));
+  setL((int) (255 * 0.8));
+  while(readIrAvg() > 870)
+  { delay(1); }
+  delay(150);
   halt();
+
+  //play a song b/c yay
   playEndSong();
   while(true)
   { delay(1); }
@@ -40,7 +61,7 @@ void playEndSong()
   {
     if (currentTime > totalTime)
     {
-      if (tempo[i] < 0) { return; }
+      if (tempo[i] < 0) { noTone(buzzerPin); return; }
       totalTime += tempo[i];
       tone(buzzerPin, 0);
       delay(7);
@@ -50,5 +71,4 @@ void playEndSong()
     currentTime++;
     delay(1);
   }
-  noTone(buzzerPin);
 }
