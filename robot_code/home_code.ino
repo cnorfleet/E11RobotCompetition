@@ -4,5 +4,7 @@
  */
 void headHome(bool rightSide) //state for heading home at end of game
 {
-  return;
+  halt();
+  while(true)
+  { Serial.print("hhhh"); }
 }

@@ -1,5 +1,7 @@
 #define thresholdCor 23
 #define LEDpin 13
+#define LEDpin2 10
+#define ninePin2 5
 #define ninePin 2
 
 #define gcLength 31
@@ -131,8 +133,8 @@ void flashCode(int beaconNum)
   {
     if(micros() > startReadTime + (interval * i))
     {
-      if(XOR(GC[abs(beaconNum - 1)][i], whiteTeam)) { digitalWrite(LEDpin, HIGH); }
-      else { digitalWrite(LEDpin, LOW); }
+      if(XOR(GC[abs(beaconNum - 1)][i], whiteTeam)) { digitalWrite(LEDpin, HIGH); digitalWrite(LEDpin2, HIGH); }
+      else { digitalWrite(LEDpin, LOW); digitalWrite(LEDpin2, LOW); }
       i++;
     }
   }
@@ -149,15 +151,17 @@ void flashCodeAndNine(int beaconNum)
   {
     if(micros() > startReadTime + (interval * i))
     {
-      if(XOR(GC[abs(beaconNum - 1)][i], whiteTeam)) { digitalWrite(LEDpin, HIGH); }
-      else { digitalWrite(LEDpin, LOW); }
-      if(XOR(GC[abs(9 - 1)][i], whiteTeam)) { digitalWrite(ninePin, HIGH); }
-      else { digitalWrite(ninePin, LOW); }
+      if(XOR(GC[abs(beaconNum - 1)][i], whiteTeam)) { digitalWrite(LEDpin, HIGH); digitalWrite(LEDpin2, HIGH); }
+      else { digitalWrite(LEDpin, LOW); digitalWrite(LEDpin2, LOW); }
+      if(XOR(GC[abs(9 - 1)][i], whiteTeam)) { digitalWrite(ninePin, HIGH); digitalWrite(ninePin2, HIGH); }
+      else { digitalWrite(ninePin, LOW); digitalWrite(ninePin2, LOW); }
       i++;
     }
   }
   digitalWrite(LEDpin, LOW);
   digitalWrite(ninePin, LOW);
+  digitalWrite(LEDpin2, LOW);
+  digitalWrite(ninePin2, LOW);
 }
 
 int codesToFlash[] = { 5, 6, 7, 8 }; //who do we appreciate

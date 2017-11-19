@@ -9,6 +9,7 @@
  double blueMoveSpeed = 120.0;
  unsigned long lastTime;
  int t;
+#define timeToGoHome 100000
 void followBlueLine()
 {
   t = 0;
@@ -19,7 +20,7 @@ void followBlueLine()
     int bNum = readBeaconWell();
     if(isCornerBeacon(bNum) and not (XOR(bNum < 0, whiteTeam)))
     {  //if see claimed bump beacon:
-      if(false) //if time is almost up, go home
+      if(millis() > startTime + timeToGoHome) //if time is almost up, go home
       { headHome(bNum % 2 == 0); }
       else //otherwise, turn around
       {

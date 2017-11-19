@@ -16,6 +16,8 @@
 */
 
 #define LEDpin 13
+#define LEDpin2 10
+#define ninePin2 5
 #define teamPin 3
 #define ninePin 2
 boolean whiteTeam = false;
@@ -38,15 +40,21 @@ int gcMult = -1;
 #define blueSpeedL 0.6
 #define blueSpeedR -0.4
 
+unsigned long startTime;
+
 void setup()
 {
   Serial.begin(9600);
   initMotors();
   initSensors();
   pinMode(LEDpin, OUTPUT);
+  pinMode(LEDpin2, OUTPUT);
   pinMode(ninePin, OUTPUT);
+  pinMode(ninePin2, OUTPUT);
   pinMode(teamPin, INPUT);
   digitalWrite(LEDpin, LOW);
+  digitalWrite(LEDpin2, LOW);
+  startTime = millis();
   delay(200);
   whiteTeam = (digitalRead(teamPin) == LOW);
   if(whiteTeam) { gcMult = 1; }
@@ -70,12 +78,11 @@ void setup()
  * if on black circle, turn right to stay on circle
  * if lost, bank turn left
  */
-
 void loop()
 {
   double moveSpeed = 200.0;
-  if(amOnBlueLineNow()) //if currently on blue line, jump to blue line state
-  { followBlueLine(); }
+  if(getBlueLineLoc() != -1) //if currently on blue line, jump to blue line state
+  { halt(); followBlueLine(); }
   else if((readIr(1) + readIr(2) + readIr(3))/3 < 720 + random(50)
     and ((readIr(4) > 720 + random(20)
     and readIr(4) < 900 + random(50))
