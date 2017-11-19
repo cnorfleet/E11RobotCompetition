@@ -13,20 +13,20 @@ void headHome(bool rightSide) //state for heading home at end of game
   //turn towards box
   if(rightSide)
   {
-    setR(0.8);
+    setR(0.7);
     setL(0.5);
-    delay(500);
+    delay(800);
   }
   else
   {
-    setR(0.5);
+    setR(0.4);
     setL(0.8);
-    delay(500);
+    delay(800);
   }
   //go to the box
   setR((int) (255 * 0.55));
   setL((int) (255 * 0.8));
-  while(readIrAvg() > 870)
+  while(readIrAvg() > 900)
   { delay(1); }
   delay(150);
   halt();

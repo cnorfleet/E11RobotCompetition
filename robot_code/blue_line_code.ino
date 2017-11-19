@@ -9,7 +9,7 @@
  double blueMoveSpeed = 120.0;
  unsigned long lastTime;
  int t;
-#define timeToGoHome 100000
+#define timeToGoHome 62000
 void followBlueLine()
 {
   t = 0;
