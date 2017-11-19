@@ -122,7 +122,7 @@ void backUp()
   {
     tone(buzzerPin, 400);
     setR(-128); setL(-128);
-    delay(250);
+    delay(500);
     halt();
     stuckTime = millis();
     noTone(buzzerPin);
