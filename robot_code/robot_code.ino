@@ -66,7 +66,7 @@ void setup()
   //start "state":
   //behavior (special): at start, go forward until it finds black circle
   setR((int) (255 * 0.6));
-  setL((int) (255 * 0.9));
+  setL((int) (255 * 0.8));
   while(readIrAvg() > 870)
   { delay(1); }
   setR((int) (255 * inSpeedR));
@@ -91,10 +91,10 @@ void loop()
   { backUp(); }
   else if(getBlueLineLoc() != -1) //if currently on blue line, jump to blue line state
   { halt(); followBlueLine(); }
-  else if((readIr(1) + readIr(2) + readIr(3))/3 < 780 + random(50)
-    and ((readIr(4) > 780 + random(20)
+  else if((readIr(1) + readIr(2) + readIr(3))/3 < 720 + random(50)
+    and ((readIr(4) > 720 + random(20)
     and readIr(4) < 900 + random(50))
-    and (readIr(5) > 780 + random(20)
+    and (readIr(5) > 720 + random(20)
     and readIr(5) < 900 + random(50)))) //if it sees the blue line and is on black circle, turn right and go to blue line state
   {
     setR((int) (moveSpeed * blueSpeedR));
@@ -102,7 +102,7 @@ void loop()
     delay(600);
     followBlueLine(); //go to following blue line state
   }
-  else if(readIrAvg() < 780 + random(100)) //if in circle, turn right
+  else if(readIrAvg() < 720 + random(100)) //if in circle, turn right
   {
     setR((int) (moveSpeed * inSpeedR));
     setL((int) (moveSpeed * inSpeedL));
