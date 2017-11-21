@@ -89,9 +89,9 @@ void loop()
   double moveSpeed = 200.0; ttt++;
   if(ttt > 200) //try to get unstuck
   { backUp(); }
-  else if(getBlueLineLoc() != -1) //if currently on blue line, jump to blue line state
-  { halt(); followBlueLine(); }
-  else if((readIr(1) + readIr(2) + readIr(3))/3 < 780 + random(50)
+  /* else if(getBlueLineLoc() != -1) //if currently on blue line, jump to blue line state
+  { halt(); followBlueLine(); } */
+  /*else if((readIr(1) + readIr(2) + readIr(3))/3 < 780 + random(50)
     and ((readIr(4) > 780 + random(20)
     and readIr(4) < 900 + random(50))
     and (readIr(5) > 780 + random(20)
@@ -101,8 +101,8 @@ void loop()
     setL((int) (moveSpeed * blueSpeedL));
     delay(600);
     followBlueLine(); //go to following blue line state
-  }
-  else if(readIrAvg() < 780 + random(100)) //if in circle, turn right
+  } */
+  else if(readIrAvg() < 750 + random(100)) //if in circle, turn right
   {
     setR((int) (moveSpeed * inSpeedR));
     setL((int) (moveSpeed * inSpeedL));
@@ -122,7 +122,7 @@ void backUp()
   {
     tone(buzzerPin, 400);
     setR(-128); setL(-128);
-    delay(500);
+    delay(300);
     halt();
     stuckTime = millis();
     noTone(buzzerPin);
